@@ -1,5 +1,5 @@
 from random import randint, sample
-from domain.CommunityChromosome import Chromosome
+from domain.TSPChromosome import Chromosome
 
 '''
 Class for a generic genetic algorithm
@@ -38,7 +38,7 @@ class GeneticAlgorithm:
     def bestChromosome(self):
         best = self.__population[0]
         for c in self.__population:
-            if (c.fitness > best.fitness):
+            if (c.fitness < best.fitness):
                 best = c
         return best
 
@@ -50,7 +50,7 @@ class GeneticAlgorithm:
     def worstChromosome(self):
         worst = self.__population[0]
         for c in self.__population:
-            if (c.fitness < worst.fitness):
+            if (c.fitness > worst.fitness):
                 worst = c
         return worst
 
@@ -62,7 +62,7 @@ class GeneticAlgorithm:
     def selection(self):
         pos1 = randint(0, self.__param["popSize"] - 1)
         pos2 = randint(0, self.__param["popSize"] - 1)
-        if (self.__population[pos1].fitness > self.__population[pos2].fitness):
+        if (self.__population[pos1].fitness < self.__population[pos2].fitness):
             return pos1
         else:
             return pos2 
@@ -106,6 +106,6 @@ class GeneticAlgorithm:
             off.mutation()
             off.fitness = self.__problParam['function'](off.repres, self.__param)
             worst = self.worstChromosome()
-            if (off.fitness > worst.fitness):
+            if (off.fitness < worst.fitness):
                 worst = off       
             
