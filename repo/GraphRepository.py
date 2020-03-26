@@ -1,3 +1,5 @@
+from math import sqrt
+
 class GraphRepository:
 
     def __init__(self):
@@ -12,13 +14,16 @@ class GraphRepository:
              destinationNode - the node to be searched
     '''
     def readData(self):
-        nodeDist = []
-        with open(self.__fileName, 'r') as file:
-            nOfNodes = int(file.readline())
-            for i in range(nOfNodes):
-                dist = file.readline().strip().split(',')
-                nodeDist.append(list(map(int,dist)))
-        return nodeDist
+        if(self.__fileName == "testTSP/berlin52.txt"):
+            return self.readBerlin()
+        else:
+            nodeDist = []
+            with open(self.__fileName, 'r') as file:
+                nOfNodes = int(file.readline())
+                for i in range(nOfNodes):
+                    dist = file.readline().strip().split(',')
+                    nodeDist.append(list(map(int,dist)))
+            return nodeDist
 
 
     '''
@@ -64,3 +69,21 @@ class GraphRepository:
             popsize = int(lines[0])
             noIterations = int(lines[1])
             return popsize, noIterations
+
+    def readBerlin(self):
+        mat = []
+        with open(self.__fileName, 'r') as file:
+            for line in file.readlines():
+                lineargs = line.split(' ')
+                mat.append((float(lineargs[1]), float(lineargs[2])))
+        
+        
+        result = []
+        for i in range(len(mat)):
+            node = []
+            for j in range(len(mat)):
+                dist = int(sqrt((mat[i][0]-mat[j][0])*(mat[i][0]-mat[j][0]) + (mat[i][1]-mat[j][1])*(mat[i][1]-mat[j][1])))
+                node.append(dist)
+            result.append(node)
+        
+        return result

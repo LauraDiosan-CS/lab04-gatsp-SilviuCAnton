@@ -16,7 +16,7 @@ class Chromosome:
 
     def __init__(self, problParam = None):
         self.__problParam = problParam
-        # self.__repres = sample(range(problParam[0], problParam['noNodes']-1), problParam['noNodes'])
+        # self.__repres = sample(range(-1, problParam['noNodes']-1), problParam['noNodes'])
         self.__repres = generateARandomPermutation(problParam['noNodes'])
         self.__fitness = 0.0
     
@@ -44,19 +44,42 @@ class Chromosome:
     Out: offspring - the newborn chromosome
     '''
     def crossover(self, c):
-        pos1 = randint(-1, self.__problParam['noNodes'] - 1)
-        pos2 = randint(-1, self.__problParam['noNodes'] - 1)
+        pos1 = randint(0, self.__problParam['noNodes'] - 2)
+        pos2 = randint(0, self.__problParam['noNodes'] - 2)
         if (pos2 < pos1):
             pos1, pos2 = pos2, pos1 
-        k = 0
-        newrepres = self.__repres[pos1 : pos2]
-        for el in c.__repres[pos2:] +c.__repres[:pos2]:
-            if (el not in newrepres):
-                if (len(newrepres) < self.__problParam['noNodes'] - pos1):
-                    newrepres.append(el)
-                else:
-                    newrepres.insert(k, el)
-                    k += 1
+
+        newrepres = [-1] * len(self.__repres)
+        for i in range(pos1, pos2 + 1):
+            newrepres[i] = self.__repres[i]
+        
+        pos = pos2+1
+        posc = pos2+1
+        if(pos == len(self.__repres)):
+            pos = 0
+        if (posc == len(self.__repres)):
+            posc = 0
+
+        while(newrepres[pos] == -1):
+            while(c.repres[posc] in newrepres):
+                posc+=1
+                if(posc == len(self.__repres)):
+                    posc = 0
+            newrepres[pos] = c.repres[posc]
+            pos += 1
+            if(pos == len(self.__repres)):
+                pos = 0
+
+
+        # k = 0
+        # newrepres = self.__repres[pos1 : pos2]
+        # for el in c.__repres[pos2:] +c.__repres[:pos2]:
+        #     if (el not in newrepres):
+        #         if (len(newrepres) < self.__problParam['noNodes'] - pos1):
+        #             newrepres.append(el)
+        #         else:
+        #             newrepres.insert(k, el)
+        #             k += 1
 
         offspring = Chromosome(self.__problParam)
         offspring.repres = newrepres
